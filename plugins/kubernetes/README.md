@@ -159,3 +159,8 @@ Users can opt-out by setting `samson/minAvailable: disabled`.
 Can be enabled per role, it then starts a new isolated deployment shifting between blue and green sufixes, 
 switching service selectors if successfully deployed and deleting previous resources.
 All active resources must be deleted manually when switching this.
+
+### Enforcing team ownership
+
+Knowing which team owns each component is useful, set `KUBERNETES_ENFORCE_TEAMS=true` 
+to make all kubernetes deploys that do not use a `metadata.labels.team` / `spec.teample.metadata.labels.team` fail.

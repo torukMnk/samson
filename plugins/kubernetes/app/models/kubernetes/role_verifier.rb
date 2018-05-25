@@ -29,6 +29,7 @@ module Kubernetes
       verify_pod_disruption_budget
       verify_numeric_limits
       verify_project_and_role_consistent
+      verify_team_labels
       verify_stateful_set_service_consistent
       verify_stateful_set_restart_policy
       verify_annotations || verify_prerequisites
@@ -154,6 +155,17 @@ module Kubernetes
 
       return if labels.uniq.size <= 1
       @errors << "Project and role labels must be consistent across resources"
+    end
+
+    def verify_team_labels
+      return unless ENV["KUBERNETES_ENFORCE_TEAMS"]
+      @elements.each do |element|
+        required = [[:metadata, :labels, :team]]
+        required << [:spec, :template, :metadata, :labels, :team] if element.dig(:spec, :template)
+        required.each do |path|
+          @errors << "#{path.join(".")} must be set" unless element.dig(*path)
+        end
+      end
     end
 
     def verify_stateful_set_service_consistent
