@@ -61,7 +61,7 @@ class Job < ActiveRecord::Base
   end
 
   def can_be_cancelled_by?(user)
-    started_by?(user) || user.admin? || user.admin_for?(project)
+    started_by?(user) || user.admin? || user.deployer_for?(project)
   end
 
   def commands
