@@ -17,3 +17,18 @@
     <p class="form-control-static"><%= @deploy_group.kubernetes_namespace %></p>
   </div>
 </div>
+
+<div class="form-group">
+  <% if DeployGroup.enabled? && @deploy_group.kubernetes_cluster.present? && @deploy_group.kubernetes_namespace.present? %>
+    <div class="col-lg-offset-2 col-lg-10 mass_rollout" style="display: none">
+      <%= link_to "Deploy All K8S Projects",
+          deploy_deploy_group_kubernetes_mass_rollouts_path(@deploy_group),
+          class: "btn btn-default",
+          data: {
+              method: "post",
+              confirm: "Deploys will be started for all stages that use the Kubernetes plugin."
+          }
+      %>
+    </div>
+  <% end %>
+</div>

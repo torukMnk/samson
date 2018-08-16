@@ -21,14 +21,11 @@ class MassRolloutsController < ApplicationController
     missing_only = params[:missing_only] == "true"
     stages_to_deploy = missing_only ? deploy_group.stages.reject(&:last_successful_deploy) : deploy_group.stages
     deploys = stages_to_deploy.map do |stage|
-      template_stage = template_stages.detect { |ts| ts.project_id == stage.project.id }
-      next unless template_stage
-
-      last_success_deploy = template_stage.last_successful_deploy
-      next unless last_success_deploy
+      template_stage_last_successful_reference = deploy_stage_reference(template_stages, stage)
+      next unless reference
 
       deploy_service = DeployService.new(current_user)
-      deploy_service.deploy(stage, reference: last_success_deploy.reference)
+      deploy_service.deploy(stage, reference: template_stage_last_successful_reference)
     end.compact
 
     if deploys.empty?
@@ -146,6 +143,16 @@ class MassRolloutsController < ApplicationController
     end
 
     stage
+  end
+
+  def deploy_stage_reference(template_stages, stage)
+    template_stage = template_stages.detect { |ts| ts.project_id == stage.project.id }
+    return nil unless template_stage
+
+    last_success_deploy = template_stage.last_successful_deploy
+    return nil unless last_success_deploy
+
+    last_success_deploy.reference
   end
 
   def deploy_group

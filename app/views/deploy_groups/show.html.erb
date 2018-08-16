@@ -72,7 +72,7 @@
 
   <div class="form-group">
     <% if DeployGroup.enabled? %>
-      <div class="col-lg-offset-2 col-lg-10" style="display: none" id="mass_rollout">
+      <div class="col-lg-offset-2 col-lg-10 mass_rollout" style="display: none">
         <%= link_to "Create Stages ...",
             new_deploy_group_mass_rollouts_path(@deploy_group),
             class: "btn btn-default"
@@ -118,7 +118,7 @@
       <%= link_to "Edit", edit_deploy_group_path(@deploy_group), class: "btn btn-primary" %>
       | <%= link_to_history @deploy_group %>
       | <%= link_to "Deploys", deploys_path(search: {group: "DeployGroup-#{@deploy_group.id}"}) %>
-      | <%= link_to "Mass rollout", "#", data: {target: "#mass_rollout"}, class: 'toggle' if DeployGroup.enabled? %>
+      | <%= link_to "Mass rollout", "#", data: {target: ".mass_rollout"}, class: 'toggle' if DeployGroup.enabled? %>
       | <%= link_to "Missing config", missing_config_deploy_group_path(@deploy_group) %>
     </div>
   </div>

@@ -19,6 +19,16 @@ Samson::Application.routes.draw do
     end
   end
 
+  resources :deploy_groups, only: [] do
+    namespace :kubernetes do
+      resource :mass_rollouts, only: [] do
+        collection do
+          post :deploy
+        end
+      end
+    end
+  end
+
   namespace :kubernetes do
     resource :role_verification, only: [:new, :create]
     resources :clusters do
